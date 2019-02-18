@@ -1,0 +1,105 @@
+<html>  
+  <head>  
+        <meta charset="utf-8">  
+        <title>上海地图</title>  
+  </head> 
+<style>
+
+
+.land {
+  fill: #ddd;
+}
+
+.state-borders {
+  fill: none;
+  stroke: #fff;
+}
+
+.airport-arc {
+  fill: none;
+}
+
+.airport:hover .airport-arc {
+  stroke: #f00;
+}
+
+.airport-cell {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: 0.1;
+  pointer-events: all;
+}
+
+
+</style>
+<body>
+<svg width="960" height="600"></svg>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v1.min.js"></script>
+<script>
+
+	var width  = 2000;
+	var height = 2000;
+	
+	var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .attr("transform", "translate(0,0)");
+	var projection = d3.geo.mercator()
+						.center([121, 31])
+						.scale(40000)
+    					.translate([width/2, height/2]);
+	
+	
+	var path = d3.geo.path()
+					.projection(projection)
+					.pointRadius(2.5);
+	var voronoi = d3.voronoi()
+	              .extent([[-1,-1],[width+1,height+1]]);
+	
+	
+	var color = d3.scale.category20();
+	
+	
+	d3.json("shanghai.json", function(error, root) {
+		if (error) 
+			return console.error(error);
+		console.log(root.features);
+		
+		svg.selectAll("path")
+			.data( root.features )
+			.enter()
+			.append("path")
+			.attr("stroke","#000")
+			.attr("stroke-width",1)
+			.attr("fill", function(d,i){
+				return color(i);
+			})
+			.attr("d", path )
+			.on("mouseover",function(d,i){
+                d3.select(this)
+                    .attr("fill","yellow");
+            })
+            .on("mouseout",function(d,i){
+                d3.select(this)
+                    .attr("fill",color(i));
+            });
+		
+	});
+	function typeAirport(d) {
+		  d[0] = +d.longitude;
+		  d[1] = +d.latitude;
+		  d.arcs = {type: "MultiLineString", coordinates: []};
+		  return d;
+		};
+
+		function typeFlight(d) {
+		  d.count = +d.count;
+		  return d;
+		};
+</script>
+	
+</body>  
+</html>  

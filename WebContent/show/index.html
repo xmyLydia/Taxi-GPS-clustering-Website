@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<title>Map-tag visualization</title>
+<link type="text/css" rel="stylesheet" href="css/style.css">
+<link type="text/css" rel="stylesheet" href="css/checkbox.css">
+<link type="text/css" rel="stylesheet" href="css/buttons.css">
+<link href="/TaxiCluster/show/base.css" rel="stylesheet" />
+ <link href="/TaxiCluster/show/loader.css" rel="stylesheet">
+<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.3/mapbox.css' rel='stylesheet' />
+<style type="text/css">
+li a:hover {
+    background-color: #111;
+}
+</style>
+   <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDPpCUzbLNdHoUBVzN9ComVjfrTs6ZKGiY&sensor=true"></script>
+<!-- script type="text/javascript" src="http://ditu.google.cn/maps/api/js"></script-->
+<script src="show/js/jquery-1.12.3.js"> </script>
+<script src="show/js/d3.min.js"></script>
+<script src="show/js/markerwithlabel.js"></script>
+<script src="show/js/jquery-ui.js"></script>
+<script type="text/javascript" src="show/js/func.js"> </script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js"></script>
+  <script src="https://api.tiles.mapbox.com/mapbox.js/v2.2.1/mapbox.js"></script>
+  <script src="/TaxiCluster/show/voronoi_map.js"></script>
+  <script src="show/js/loader.js"></script>
+</head>
+
+<body>
+ 	
+<div id="main">
+		
+	<div id="tab" class="tab"   style="position:absolute;height:200;width:200;overflow:auto;background:#EEEEEE;">
+	<ul style="list-style-type:none;margin:0;padding:0;overflow: hidden;background-color: #333;">
+     <!--li style="display:inline;float: left;"><a href="" class="active" style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;">Beijing Routes</a></li-->
+     <li style="display:inline;float: left;"><a id ="mopsi_jump" style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;">Mopsi Route</a></li>
+    </ul>
+   
+    
+		<!--div id="tab-title" class="tab-title"  >
+			<ul>
+				<li>
+					<a id="path_click" href="#" class="tooltip-test" data-toggle="tooltip" title="basic statistics">statistic</a>
+				</li>
+				<li><a id="compare_click" href="#"class="tooltip-test" data-toggle="tooltip" title="compare trajectories">trajectory</a></li>
+				<li><a id="all_click" href="#"class="tooltip-test" data-toggle="tooltip" title="region-of-interest">ROI</a></li>
+			</ul>
+		</div-->
+		<div id="tab-content" class="tab-content-box">
+			<div id="single-path" class="tab-content" style="display:block">
+			<!--div style="height:60px; text-align:left">
+				<span style="line-height:60px">please input taxi-id</span>
+			</div-->
+			<div class="fuzzy-search-div" >
+				<!--span style="text-align:left"><input id="fuzzy-search-id" class="fuzzy-search-input" ></span>
+			    	<button id="show_single_data" class="button button-glow button-border button-rounded button-primary"style="margin-left:30px;">Show</button>
+			<hr>
+			<button id="traclus" class="button button-glow button-border button-rounded button-primary"style="margin-left:30px;">Show traclus</button>
+			<button id="characteristics" class="button button-glow button-border button-rounded button-primary"style="margin-left:30px;">Show Characteristics points</button-->
+	
+	<div class="btn-group" id="menu" >
+	<h4>STEP1: please first choose user and number of routes:</h4>
+	<div class="row">
+	<div class="col-xs-4 col-sm-3" >
+	<!--   button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="btn-cp">Partition
+		<span class="caret"></span>
+	</button-->
+		<div class="dropdown">
+	<button type="button"   id="user_menu" class="btn btn-primary dropdown-toggle " data-toggle="dropdown">
+		User
+		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu"  id="user">
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1"   id="Kur" >kuurna </a>
+		</li>
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1"   id="Pas">Pasi</a>
+		</li>
+	 
+	</ul>
+</div>
+	</div>
+	<div class="col-xs-4 col-sm-3" >
+		 	<div class="dropdown">
+	<button type="button"   id="routes_menu" class="btn btn-primary dropdown-toggle " data-toggle="dropdown">
+		Routes
+		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu"  id="routes">
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1"     >2 </a>
+		</li>
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1"    >3</a>
+		</li>
+	 <li role="presentation">
+			<a role="menuitem" tabindex="-1"     >4 </a>
+		</li>
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1"    >5</a>
+		</li>
+	</ul>
+</div>
+	</div>
+	
+	<div class="col-xs-4 col-sm-3" >
+		 	<div class="dropdown">
+	<button type="button"   id="method_menu" class="btn btn-primary dropdown-toggle " data-toggle="dropdown">
+		Methods
+		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu"  id="avg_method">
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1"     >Traclus </a>
+		</li>
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1"    >DBA</a>
+		</li>
+	 
+	</ul>
+</div>
+	</div>
+	</div>
+	<br>
+	<button type="button" class="btn btn-primary " id="route_submit" style="display:none">submit </button>
+	<br>
+	
+	<!--button type="button" class="btn btn-primary "  id="mopsi_DBA">DBA
+		 
+	</button-->
+	<div class="col-xs-6 col-sm-3" >
+	<!--button type="button" class="btn btn-primary "  id="mopsi_all">All Mopsi
+		 
+	</button-->
+	
+	</div>
+	
+	<br>
+	<div class="row">
+	<div class="col-xs-6 col-sm-3" >
+    <table class="table table-bordered" id="legend_table" style="display:none">
+    <caption>Legend</caption>
+    <thead>
+        <tr>
+            <th>route</th>
+            <th>color</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Raw</td>
+            <td><img src="show/pic/black.png"   ></td>
+        </tr>
+        <tr>
+            <td>Averaging</td>
+            <td><img src="show/pic/red.png"   ></td>
+        </tr>
+     
+    </tbody>
+</table>
+	</div>
+	</div>
+	<br>
+<!--  div id="loader">
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped" id="progress_bar">
+            <div class="progress-value" id="progress_value"></div>
+        </div>
+    </div>
+</div-->
+ 
+<br>
+
+	<button type="button" class="btn btn-primary "  id="mopsi-cluster" style="display:none">STEP2: Clustering 
+	</button>
+	<br>
+	<div id="kmeansMopsi_panel" style="display: none" >
+<form role="form">
+	<div class="form-group">
+	<br>
+		<label for="name">K</label>
+		<input type="text" class="form-control" id="k_mopsi" 
+			   placeholder="15">
+	</div>
+	<div class="form-group">
+		<label for="name">K-Iterator</label>
+		<input type="text" class="form-control" id="k-iterator_mopsi" 
+			   placeholder="100">
+	</div>
+		
+</form>
+<div class="row">
+	<div class="col-md-6"> 
+	<button type="submit" class="btn btn-primary" id="kmeansMopsi_submit">Points clustering</button>
+	</div>
+</div>
+<br>
+<button type="submit" class="btn btn-primary" id="voronoi_Mopsi" style="display: none">Voronoi performance</button>
+</div>
+	<!-- div class="row">
+	 <div class="col-xs-6 col-sm-3" >
+	<button type="button" class="btn btn-primary "  id="mopsi_seg" >segment
+	</button>
+	</div>
+	 <div class="col-xs-6 col-sm-3" >
+	<button type="button" class="btn btn-primary "  id="mopsi_rep">representatives
+	</button>
+	</div>
+	
+	</div-->
+	
+	<ul class="dropdown-menu" role="menu"id="cp">
+		<li ><a  id="mdl">MDL</a></li>
+		<li ><a  id="sga">SGA</a></li>
+	</ul>
+	<br>
+	 
+		</div><!-- 这是从204行挪过来的 -->
+	<br>
+	<br>
+	
+	
+</div>
+		 
+<div  id="choosed_partition_table" style="display:none">
+			<table id="partition_table"class="table table-bordered"style="text-align:center;">
+			<thead>
+			<tr id="partition_tr">
+			
+			</tr>
+			</thead>
+			 </table>
+			</div>	
+			<div id="sga_panel" style="display: none" >
+	
+<form role="form">
+	<div class="form-group">
+	<br>
+		<label for="name">minAngle</label>
+		<input type="text" class="form-control" id="minAngle" 
+			   placeholder="3">
+	</div>
+	<div class="form-group">
+		<label for="name">MinStopDuration</label>
+		<input type="text" class="form-control" id="minStopDuration" 
+			   placeholder="3">
+	</div>
+	<div class="form-group">
+		<label for="name">MinDistance</label>
+		<input type="text" class="form-control" id="minDistance" 
+			   placeholder="0.0001">
+	</div>
+	<div class="form-group">
+		<label for="name">MaxDistance</label>
+		<input type="text" class="form-control" id="maxDistance" 
+			   placeholder="0.1">
+	</div>
+	<button type="submit" class="btn btn-default" id="sga_submit">submit</button>
+</form>
+</div>		
+			<br>
+			 
+			<div class="btn-group" id="menu" >
+			<div id="divCluster"style="display: none" >
+			<h4 id="cluster_info">STEP2: please choose clustering type:</h4>
+	<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" id="btn-cluster">STEP2: Clustering 
+		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu"id="select_algor" style="cursor:pointer;">
+		<li ><a href="#"id="kmeans">KMeans</a></li>
+		<li ><a href="#"id="dbscan">DBSCAN</a></li>
+		<li ><a href="#"id="hierachical">Hierarchical</a></li>
+		<li ><a href="#"id="grid">GridGrowing</a></li>
+		<!-- li><a href = "#" id ="traclus_dbscan">traclus_dbscan</a-->
+	</ul>
+	</div>
+	 </div><!-- 从195行挪过来的 -->
+	
+<div id="kmeans_panel" style="display: none" >
+<form role="form">
+	<div class="form-group">
+	<br>
+		<label for="name">K</label>
+		<input type="text" class="form-control" id="k" 
+			   placeholder="15">
+	</div>
+	<div class="form-group">
+		<label for="name">K-Iterator</label>
+		<input type="text" class="form-control" id="k-iterator" 
+			   placeholder="100">
+	</div>
+		<div class="row">
+	<div class="col-md-6"> 
+	<button type="submit" class="btn btn-default" id="kmeans_submit">Characteristic clustering</button>
+	</div>
+	<div class="col-md-4">
+	<button id="exp_seg_kmeans" class="btn btn-default" style="display:none"  >Segments clustering</button>
+	</div>
+</div>
+</form>
+</div>
+<div id="dbscan_panel" style="display: none" >
+<form role="form">
+	<div class="form-group">
+	<br>
+		<label for="name">Eps</label>
+		<input type="text" class="form-control" id="eps" 
+			   placeholder="4">
+	</div>
+	<div class="form-group">
+		<label for="name">MinPts</label>
+		<input type="text" class="form-control" id="minpts" 
+			   placeholder="2">
+	</div>
+	<div class="row">
+	<div class="col-md-6"> 
+	<button type="submit" class="btn btn-default" id="dbscan_submit">Characteristic clustering</button>
+	</div>
+	<div class="col-md-4">
+	<button id="exp_seg_dbscan" class="btn btn-default" style="display:none"  >Segments clustering</button>
+	</div>
+	</div>
+</form>
+</div>
+<div id="hierarchical_panel" style="display: none" >
+<form role="form">
+	<div class="form-group">
+	<br>
+		<label for="name">N</label>
+		<input type="text" class="form-control" id="n" 
+			   placeholder="10">
+	</div>
+	 
+	<div class="row">
+	<div class="col-md-6"> 
+	<button type="submit" class="btn btn-default"id="hierarchical_submit">Characteristic clustering</button>
+	</div>
+	<div class="col-md-4">
+	<button id="exp_seg_agnes" class="btn btn-default" style="display:none"  >Segments clustering</button>
+	</div>
+	</div>
+</form>
+</div>
+<div id="grid_panel" style="display: none" >
+<form role="form">
+	<div class="form-group">
+	<br>
+		<label for="name">m</label>
+		<input type="text" class="form-control" id="m" 
+			   placeholder="17">
+	</div>
+	<div class="form-group">
+		<label for="name">nx</label>
+		<input type="text" class="form-control" id="nx" 
+			   placeholder="147">
+	</div>
+	<div class="form-group">
+		<label for="name">ny</label>
+		<input type="text" class="form-control" id="ny" 
+			   placeholder="146">
+	</div>
+	<button type="submit" class="btn btn-default" id="grid_submit">submit</button>
+</form>
+</div>
+<!--div id="traclus_dbscan_panel" style="display: none" >
+<form role="form">
+	<div class="form-group">
+	<br>
+		<label for="name">Eps</label>
+		<input type="text" class="form-control" id="traclus_eps" 
+			   placeholder="4">
+	</div>
+	<div class="form-group">
+		<label for="name">MinLns</label>
+		<input type="text" class="form-control" id="traclus_minlns" 
+			   placeholder="2">
+	</div>
+	<div class="row">
+	<div class="col-md-6"> 
+	<button type="submit" class="btn btn-default" id="traclus_dbscan_submit">submit</button>
+	</div>
+	<div class="col-md-6">
+	<button id="exp_seg" class="btn btn-primary" style="display:none"  >show segments clustering</button>
+	</div>
+	</div>
+</form>
+</div-->
+		<button id="repre_track" class="button button-glow button-border button-rounded button-primary"style="display: none;margin-left:30px;">Representative</button>
+		
+			
+		 
+			<div  id="frequency" style="display:none">
+			<table id="frequency_table"class="table table-bordered">
+			<thead>
+			<tr id="tr1">
+			<th>id</th>
+			<th>frequency</th>
+			</tr>
+			</thead>
+			 </table>
+			</div>
+			
+		 
+				<div style="text-align: center;vertical-align: middle;" > 
+				<div id="mse" style="display:none">
+	 <h4 id="showInfo"> </h4>
+	</div>
+			
+	         	<!-- button id="exp_seg" class="btn btn-primary" style="display:none"  >show segments clustering</button-->
+	         			<br>
+				<br>
+				<div  id="mse_div" style="display:none">
+			<table id="mse_table"class="table table-bordered"style="text-align:center;">
+			<thead>
+			<tr id="mse_tr">
+			</tr>
+			</thead>
+			 </table>
+			</div>	
+				<button id="exp" class="btn btn-primary" style="display:none"   >show segments</button>
+			
+				<!-- button id="load_data" class="button button-glow button-border button-rounded button-primary"data-toggle="modal" data-target="#myModal">load data</button-->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					Load Data
+				</h4>
+			</div>
+			<div class="modal-body">
+				add something over here
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">close
+				</button>
+				<button type="button" class="btn btn-primary">
+					submit
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+				
+				</div>
+				 <h4 id="representative_info"style="display:none" >STEP3: generate representative tracks</h4>
+			 <button id="traclus-rep" class="btn btn-primary"style="display:none" >representative track</button>		
+			 
+				<!--button id="show_single_data_next_page" class="button button-primary button-rounded button-small">Next</button-->
+				<button id="voronoi" class="btn btn-primary" style="display:none">Voronoi</button>	
+			</div>
+		 
+
+ 
+			<div id="compare-path" class="tab-content" style="display:none" >
+		 <div style=" text-align: center;vertical-align: middle;"  >
+			 <!--   a id="showAllTrack" class="button button-glow button-border button-rounded button-primary center" >All trajectories</a>
+				<br>
+				<label class="demo--label">
+				<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput" ></span>
+        			<span  >All trajectories</span>
+    				</label-->
+    				<p><input type="checkbox" name="alltracks" value="alltracks"id="allTracks"/> All trajectories</p>
+    	  <!-- button id="hierarchical-cluster" class="button button-glow button-border button-rounded button-primary"data-toggle="modal" data-target="#myModal">hierarchical cluster</button-->
+				
+			</div>
+		 
+				<div style="height:100px; text-align:center">
+				<span style="line-height:100px">please choose taxi-id/taxi-ids</span>
+			</div>
+			<ul>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+			</ul>
+			
+				<a id="show_compared_data_previous_page" class="button button-primary button-rounded button-small">Previous</a>
+				<a id="show_compared_data" class="button button-glow button-border button-rounded button-primary">Show</a>
+				<a id="show_compared_data_next_page" class="button button-primary button-rounded button-small">Next</a>
+			</div> 
+				<div id="total-path" class="tab-content" style="display:none" >
+		 
+				<div id="cluster-method-selection" class="cluster-method-selection">
+					<select id="selector" class="cluster-selection">
+						<option value="kmeans">K-Means</option>
+						<option value="dbscan">DBSCAN</option>
+						<option value="agnes">AGNES</option>
+					</select>
+				</div>
+				<div id="statistics_graph" class="statistics-graph">
+				</div>
+			
+				<a id="show_pick_drop_points" class="button button-glow button-border button-rounded button-primary" style="margin-left:120px">Show</a>
+			   
+			  
+			</div>
+		</div> 
+		
+	</div>
+    <div id="map-canvas" class="map"></div>
+    
+</div>
+</body>
+
+<a href="http://www.miibeian.gov.cn/" target="_blank" rel="nofollow">沪ICP备16041064号-1</a>
+</html>

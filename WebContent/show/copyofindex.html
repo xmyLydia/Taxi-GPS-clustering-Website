@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<title>Map-tag visualization</title>
+<link type="text/css" rel="stylesheet" href="css/style.css">
+<link type="text/css" rel="stylesheet" href="css/checkbox.css">
+<link type="text/css" rel="stylesheet" href="css/buttons.css">
+<style type="text/css"></style>
+   <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDPpCUzbLNdHoUBVzN9ComVjfrTs6ZKGiY&sensor=true"></script>
+<!-- script type="text/javascript" src="http://ditu.google.cn/maps/api/js"></script-->
+<script src="show/js/jquery-1.12.3.js"> </script>
+<script src="show/js/d3.min.js"></script>
+<script src="show/js/markerwithlabel.js"></script>
+<script src="show/js/jquery-ui.js"></script>
+<script type="text/javascript" src="show/js/func.js"> </script>
+
+</head>
+
+<body>
+ 	
+<div id="main">
+		
+	<div id="tab" class="tab"   style="position:absolute;height:200;width:200;overflow:auto;background:#EEEEEE;">
+		<div id="tab-title" class="tab-title"  >
+			<ul>
+				<li>
+					<a id="path_click" href="#" class="tooltip-test" data-toggle="tooltip" title="basic statistics">statistic</a>
+				</li>
+				<li><a id="compare_click" href="#"class="tooltip-test" data-toggle="tooltip" title="compare trajectories">trajectory</a></li>
+				<li><a id="all_click" href="#"class="tooltip-test" data-toggle="tooltip" title="region-of-interest">ROI</a></li>
+			</ul>
+		</div>
+		<div id="tab-content" class="tab-content-box">
+			<div id="single-path" class="tab-content" style="display:block">
+			<div style="height:60px; text-align:left">
+				<span style="line-height:60px">please input taxi-id</span>
+			</div>
+			<div class="fuzzy-search-div" >
+				<span style="text-align:left"><input id="fuzzy-search-id" class="fuzzy-search-input" ></span>
+			    	<button id="show_single_data" class="button button-glow button-border button-rounded button-primary"style="margin-left:30px;">Show</button>
+			<hr>
+			<button id="traclus" class="button button-glow button-border button-rounded button-primary"style="margin-left:30px;">Show traclus</button>
+			<button id="characteristics" class="button button-glow button-border button-rounded button-primary"style="margin-left:30px;">Show Characteristics points</button>
+			
+			</div>
+			<!--  ul class = "single-path-ul">
+				<li class = "single-path-li">
+					<label class="demo--label">
+        			<input class="demo--radio" type="radio" name="demo-radio">
+        			<span class="demo--radioInput"></span>
+        			<span class="tab-content-span"></span>
+    				</label>
+				</li>
+				<li class = "single-path-li">
+					<label class="demo--label">
+        			<input class="demo--radio" type="radio" name="demo-radio">
+        			<span class="demo--radioInput"></span>
+        			<span class="tab-content-span"></span>
+    				</label>
+				</li>
+				<li class = "single-path-li">
+					<label class="demo--label">
+        			<input class="demo--radio" type="radio" name="demo-radio">
+        			<span class="demo--radioInput"></span>
+        			<span class="tab-content-span"></span>
+    				</label>
+				</li>
+				<li class = "single-path-li">
+					<label class="demo--label">
+        			<input class="demo--radio" type="radio" name="demo-radio">
+        			<span class="demo--radioInput"></span>
+        			<span class="tab-content-span"></span>
+    				</label>
+				</li>
+				<li class = "single-path-li">
+					<label class="demo--label">
+        			<input class="demo--radio" type="radio" name="demo-radio">
+        			<span class="demo--radioInput"></span>
+        			<span class="tab-content-span"></span>
+    				</label>
+				</li>
+				<li class = "single-path-li">
+					<label class="demo--label">
+        			<input class="demo--radio" type="radio" name="demo-radio">
+        			<span class="demo--radioInput"></span>
+        			<span class="tab-content-span"></span>
+    				</label>
+				</li>
+				<li class = "single-path-li">
+					<label class="demo--label">
+        			<input class="demo--radio" type="radio" name="demo-radio">
+        			<span class="demo--radioInput"></span>
+        			<span class="tab-content-span"></span>
+    				</label>
+				</li>
+				<li class = "single-path-li">
+					<label class="demo--label">
+        			<input class="demo--radio" type="radio" name="demo-radio">
+        			<span class="demo--radioInput"></span>
+        			<span class="tab-content-span"></span>
+    				</label>
+				</li>
+				<li class = "single-path-li">
+					<label class="demo--label">
+        			<input class="demo--radio" type="radio" name="demo-radio">
+        			<span class="demo--radioInput"></span>
+        			<span class="tab-content-span"></span>
+    				</label>
+				</li>
+				<li class = "single-path-li">
+					<label class="demo--label">
+        			<input class="demo--radio" type="radio" name="demo-radio">
+        			<span class="demo--radioInput"></span>
+        			<span class="tab-content-span"></span>
+    				</label>
+				</li>
+			</ul--> 
+			<div  id="frequency" style="display:none">
+			<table id="frequency_table"class="table table-bordered">
+			<thead>
+			<tr id="tr1">
+			<th>id</th>
+			<th>frequency</th>
+			</tr>
+			</thead>
+			 </table>
+			</div>
+			
+			<br>
+			<br>
+				<!-- button id="show_single_data_previous_page" class="button button-primary button-rounded button-small">Previous</button-->
+				<div style="text-align: center;vertical-align: middle;"> 
+				<!-- button id="show_single_data" class="button button-glow button-border button-rounded button-primary">Show</button-->
+				<br>
+				<br>
+				<br>
+				<!-- button id="load_data" class="button button-glow button-border button-rounded button-primary"data-toggle="modal" data-target="#myModal">load data</button-->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					Load Data
+				</h4>
+			</div>
+			<div class="modal-body">
+				add something over here
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">close
+				</button>
+				<button type="button" class="btn btn-primary">
+					submit
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+				
+				</div>
+				<!--button id="show_single_data_next_page" class="button button-primary button-rounded button-small">Next</button-->
+				
+			</div>
+			<div id="compare-path" class="tab-content" style="display:none" >
+		 <div style=" text-align: center;vertical-align: middle;"  >
+			 <!--   a id="showAllTrack" class="button button-glow button-border button-rounded button-primary center" >All trajectories</a>
+				<br>
+				<label class="demo--label">
+				<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput" ></span>
+        			<span  >All trajectories</span>
+    				</label-->
+    				<p><input type="checkbox" name="alltracks" value="alltracks"id="allTracks"/> All trajectories</p>
+    	  <!-- button id="hierarchical-cluster" class="button button-glow button-border button-rounded button-primary"data-toggle="modal" data-target="#myModal">hierarchical cluster</button-->
+				
+			</div>
+		 
+				<div style="height:100px; text-align:center">
+				<span style="line-height:100px">please choose taxi-id/taxi-ids</span>
+			</div>
+			<ul>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+				<li>
+					<label class="demo--label">
+        			<input id="compare-checkbox" class="demo--radio" type="checkbox" name="demo-checkbox1">
+        			<span class="demo--checkbox demo--radioInput"></span>
+        			<span class="tab-compared-span"></span>
+    				</label>
+				</li>
+			</ul>
+			
+				<a id="show_compared_data_previous_page" class="button button-primary button-rounded button-small">Previous</a>
+				<a id="show_compared_data" class="button button-glow button-border button-rounded button-primary">Show</a>
+				<a id="show_compared_data_next_page" class="button button-primary button-rounded button-small">Next</a>
+			</div> 
+				<div id="total-path" class="tab-content" style="display:none" >
+		 
+				<div id="cluster-method-selection" class="cluster-method-selection">
+					<select id="selector" class="cluster-selection">
+						<option value="kmeans">K-Means</option>
+						<option value="dbscan">DBSCAN</option>
+						<option value="agnes">AGNES</option>
+					</select>
+				</div>
+				<div id="statistics_graph" class="statistics-graph">
+				</div>
+			
+				<a id="show_pick_drop_points" class="button button-glow button-border button-rounded button-primary" style="margin-left:120px">Show</a>
+			   
+			  
+			</div>
+		</div> 
+		
+	</div>
+    <div id="map-canvas" class="map"></div>
+</div>
+</body>
+
+<a href="http://www.miibeian.gov.cn/" target="_blank" rel="nofollow">沪ICP备16041064号-1</a>
+</html>

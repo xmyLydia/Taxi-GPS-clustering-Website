@@ -1,0 +1,63 @@
+	$("#show_compared_data").click(function(){
+		//get selected ids		
+		testData.comparedTaxiIds = selectedComparedTaxiIds;
+		similarityNode = [];
+		similarityEdge = [];
+		$.ajax({ 
+	            type:"POST", 
+	            url:"taxi/compare", 
+	            dataType:"json",      
+	            contentType:"application/json; charset=utf-8", 
+				data:JSON.stringify(testData),
+	            success:function(data){
+					clearPathAndMarker();
+					var allTrajectory = data.fragment;
+					similarityEdge = data.similarity;
+					for(var a in allTrajectory){
+						var singleTrajectory = allTrajectory[a];
+						var lineSymbol = {
+							    path: google.maps.SymbolPath.FORWARD_OPEN_ARROW,
+							  };
+						var getRandomColor = randomColor();
+						var poly = new google.maps.Polyline({
+							    strokeColor: '#FF0000',
+							    strokeOpacity: 1.0,
+							    strokeWeight: 3,
+							    map:map,
+							    icons: [{
+							        icon: lineSymbol,
+							        offset: '100%'
+							      }]
+							  });
+						for(var b in singleTrajectory){
+							var myLatlng = new google.maps.LatLng(singleTrajectory[b].latitude,singleTrajectory[b].longtitude);
+							if(a==0) map.setCenter(myLatlng);
+							var path = poly.getPath();
+							path.push(myLatlng);
+							//open a info window
+							if(b==0){
+								index = parseInt(a)+parseInt("1");
+								var content = "track"+index;
+								similarityNode.push(content);
+								marker = new google.maps.Marker({
+			            		    position: myLatlng,
+			            		    title:content,
+			            		    map:map
+			            		});
+								marker.addListener('click',showChord);
+								markers.push(marker);
+								var latlng = new google.maps.LatLng(singleTrajectory[b].latitude,singleTrajectory[b].longtitude+0.02);
+								var infowindow = new google.maps.InfoWindow({
+								    content: content
+								  });
+								infowindow.open(map,marker);
+							}
+						}
+						trajectory.push(poly);
+						
+					}
+					selectedComparedTaxiIds = [];
+					$(".demo--radio").attr("checked",false);
+				}
+		});
+	});
